@@ -22,7 +22,7 @@
 		A1000001226F00200 /* Exceptions for "MoisesMusicApp" folder in "MoisesMusicApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"/Resources/Info.plist",
+				Resources/Info.plist,
 			);
 			target = A1000001226F00300 /* MoisesMusicApp */;
 		};

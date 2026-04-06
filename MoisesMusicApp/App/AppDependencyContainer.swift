@@ -19,7 +19,7 @@ public final class AppDependencyContainer: ObservableObject {
 
     // MARK: - Data Sources
 
-    private lazy var iTunesDataSource: iTunesDataSourceProtocol = Data.iTunesDataSource(httpClient: httpClient)
+    private lazy var iTunesRemoteDataSource: iTunesDataSourceProtocol = iTunesDataSource(httpClient: httpClient)
     private lazy var swiftDataSource: LocalDataSource = {
         SwiftDataSourceAdapter(modelContainer: modelContainer)
     }()
@@ -27,7 +27,7 @@ public final class AppDependencyContainer: ObservableObject {
     // MARK: - Repositories
 
     private lazy var songRepository: SongRepository = SongRepositoryImpl(
-        remoteDataSource: iTunesDataSource,
+        remoteDataSource: iTunesRemoteDataSource,
         localDataSource: swiftDataSource
     )
 

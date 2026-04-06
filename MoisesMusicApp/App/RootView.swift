@@ -65,9 +65,6 @@ enum NavigationDestination: Hashable {
     case album(Int)
 }
 
-// Make Song conform to Identifiable for fullScreenCover
-extension Song: @retroactive Identifiable {}
-
 #Preview {
     RootView()
         .environmentObject(AppDependencyContainer())

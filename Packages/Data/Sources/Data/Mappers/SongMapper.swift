@@ -2,13 +2,13 @@ import Foundation
 import Domain
 
 public enum SongMapper {
-    private static let dateFormatter: ISO8601DateFormatter = {
+    nonisolated(unsafe) private static let dateFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
     }()
 
-    private static let fallbackDateFormatter: ISO8601DateFormatter = {
+    nonisolated(unsafe) private static let fallbackDateFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime]
         return formatter
@@ -97,13 +97,13 @@ public enum SongMapper {
 }
 
 public enum AlbumMapper {
-    private static let dateFormatter: ISO8601DateFormatter = {
+    nonisolated(unsafe) private static let dateFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
     }()
 
-    private static let fallbackDateFormatter: ISO8601DateFormatter = {
+    nonisolated(unsafe) private static let fallbackDateFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime]
         return formatter

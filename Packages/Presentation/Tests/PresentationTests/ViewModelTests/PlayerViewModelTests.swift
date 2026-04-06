@@ -7,11 +7,7 @@ import XCTest
 final class PlayerViewModelTests: XCTestCase {
 
     func testInitialState() {
-        let viewModel = PlayerViewModel(
-            song: .mock,
-            audioPlayer: MockAudioPlayer(),
-            saveRecentlyPlayedUseCase: MockSaveRecentlyPlayedUseCase()
-        )
+        let viewModel = createViewModel()
 
         XCTAssertFalse(viewModel.isPlaying)
         XCTAssertEqual(viewModel.currentTime, 0)
@@ -21,15 +17,15 @@ final class PlayerViewModelTests: XCTestCase {
 
     func testTogglePlayPausePausesWhenPlaying() async throws {
         let mockAudioPlayer = MockAudioPlayer()
-        let viewModel = PlayerViewModel(
-            song: .mock,
-            audioPlayer: mockAudioPlayer,
-            saveRecentlyPlayedUseCase: MockSaveRecentlyPlayedUseCase()
-        )
-        viewModel.isPlaying = true
+        mockAudioPlayer.playbackState = .playing
+        let viewModel = createViewModel(audioPlayer: mockAudioPlayer)
 
+        // Simulate playing state by calling onAppear and waiting for it to start
+        viewModel.onAppear()
+        try await Task.sleep(for: .milliseconds(200))
+
+        // Now toggle to pause
         viewModel.togglePlayPause()
-
         try await Task.sleep(for: .milliseconds(100))
 
         XCTAssertEqual(mockAudioPlayer.pauseCallCount, 1)
@@ -37,15 +33,10 @@ final class PlayerViewModelTests: XCTestCase {
 
     func testTogglePlayPauseResumesWhenPaused() async throws {
         let mockAudioPlayer = MockAudioPlayer()
-        let viewModel = PlayerViewModel(
-            song: .mock,
-            audioPlayer: mockAudioPlayer,
-            saveRecentlyPlayedUseCase: MockSaveRecentlyPlayedUseCase()
-        )
-        viewModel.isPlaying = false
+        let viewModel = createViewModel(audioPlayer: mockAudioPlayer)
 
+        // Start fresh (not playing) and toggle to play
         viewModel.togglePlayPause()
-
         try await Task.sleep(for: .milliseconds(100))
 
         XCTAssertEqual(mockAudioPlayer.resumeCallCount, 1)
@@ -53,11 +44,7 @@ final class PlayerViewModelTests: XCTestCase {
 
     func testSkipForward() async throws {
         let mockAudioPlayer = MockAudioPlayer()
-        let viewModel = PlayerViewModel(
-            song: .mock,
-            audioPlayer: mockAudioPlayer,
-            saveRecentlyPlayedUseCase: MockSaveRecentlyPlayedUseCase()
-        )
+        let viewModel = createViewModel(audioPlayer: mockAudioPlayer)
 
         viewModel.skipForward()
 
@@ -68,11 +55,7 @@ final class PlayerViewModelTests: XCTestCase {
 
     func testSkipBackward() async throws {
         let mockAudioPlayer = MockAudioPlayer()
-        let viewModel = PlayerViewModel(
-            song: .mock,
-            audioPlayer: mockAudioPlayer,
-            saveRecentlyPlayedUseCase: MockSaveRecentlyPlayedUseCase()
-        )
+        let viewModel = createViewModel(audioPlayer: mockAudioPlayer)
 
         viewModel.skipBackward()
 
@@ -83,11 +66,7 @@ final class PlayerViewModelTests: XCTestCase {
 
     func testSeek() async throws {
         let mockAudioPlayer = MockAudioPlayer()
-        let viewModel = PlayerViewModel(
-            song: .mock,
-            audioPlayer: mockAudioPlayer,
-            saveRecentlyPlayedUseCase: MockSaveRecentlyPlayedUseCase()
-        )
+        let viewModel = createViewModel(audioPlayer: mockAudioPlayer)
 
         viewModel.seek(to: 30)
 
@@ -98,28 +77,28 @@ final class PlayerViewModelTests: XCTestCase {
     }
 
     func testProgressCalculation() {
-        let viewModel = PlayerViewModel(
-            song: .mock,
-            audioPlayer: MockAudioPlayer(),
-            saveRecentlyPlayedUseCase: MockSaveRecentlyPlayedUseCase()
-        )
-        viewModel.currentTime = 45
-        viewModel.duration = 90
+        // Using preview to set internal state for testing computed properties
+        let viewModel = PlayerViewModel.preview(currentTime: 45, duration: 90)
 
         XCTAssertEqual(viewModel.progress, 0.5, accuracy: 0.01)
     }
 
     func testFormattedTime() {
-        let viewModel = PlayerViewModel(
-            song: .mock,
-            audioPlayer: MockAudioPlayer(),
-            saveRecentlyPlayedUseCase: MockSaveRecentlyPlayedUseCase()
-        )
-        viewModel.currentTime = 65
-        viewModel.duration = 180
+        // Using preview to set internal state for testing computed properties
+        let viewModel = PlayerViewModel.preview(currentTime: 65, duration: 180)
 
         XCTAssertEqual(viewModel.formattedCurrentTime, "1:05")
         XCTAssertEqual(viewModel.formattedDuration, "3:00")
+    }
+
+    // MARK: - Helper
+
+    private func createViewModel(audioPlayer: MockAudioPlayer = MockAudioPlayer()) -> PlayerViewModel {
+        PlayerViewModel(
+            song: .mock,
+            audioPlayer: audioPlayer,
+            saveRecentlyPlayedUseCase: MockSaveRecentlyPlayedUseCase()
+        )
     }
 }
 
