@@ -22,20 +22,20 @@ public struct ProgressSliderView: View {
     }
 
     public var body: some View {
-        VStack(spacing: AppSpacing.xs) {
+        VStack(spacing: 8) {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     // Background track
-                    RoundedRectangle(cornerRadius: 2)
+                    RoundedRectangle(cornerRadius: 20)
                         .fill(AppColors.searchBarBackground)
-                        .frame(height: 4)
+                        .frame(height: 8)
 
                     // Progress track
-                    RoundedRectangle(cornerRadius: 2)
+                    RoundedRectangle(cornerRadius: 20)
                         .fill(AppColors.accent)
                         .frame(
                             width: max(0, geometry.size.width * displayProgress),
-                            height: 4
+                            height: 8
                         )
 
                     // Thumb

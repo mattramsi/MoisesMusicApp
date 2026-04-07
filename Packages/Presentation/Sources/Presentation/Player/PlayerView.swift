@@ -17,22 +17,22 @@ public struct PlayerView: View {
 
             VStack(spacing: 0) {
                 navigationBar
-
-                Spacer()
-
+                
                 artworkView
+                    .padding(.top, 100)
 
                 songInfo
+                    .frame(height: 66)
                     .padding(.top, 116)
 
                 progressView
+                    .frame(height: 45)
                     .padding(.horizontal, AppSpacing.xl)
                     .padding(.top, AppSpacing.xl)
 
                 controlsView
-                    .padding(.top, AppSpacing.xl)
-
-                Spacer()
+                    .frame(height: 72)
+                    .padding(.top, AppSpacing.lg)
             }
         }
         .onAppear {
@@ -56,30 +56,34 @@ public struct PlayerView: View {
             .presentationDragIndicator(.hidden)
         }
     }
+    
+    private var backButton: some View {
+        Button {
+            dismiss()
+        } label: {
+            Image("ic-back", bundle: .main)
+                .resizable()
+                .frame(width: 48, height: 48)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("back button")
+    }
+    
+    private var moreButton: some View {
+        Button {
+            viewModel.onMoreTapped()
+        } label: {
+            Image("ic-more", bundle: .main)
+                .resizable()
+                .frame(width: 48, height: 48)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("more button")
+    }
 
     private var navigationBar: some View {
         HStack {
-            Button {
-                dismiss()
-            } label: {
-                ZStack {
-                    // Top-leading arc
-                    Circle()
-                        .trim(from: 0.55, to: 0.95)
-                        .stroke(AppColors.primaryText.opacity(0.3), lineWidth: 1)
-                    // Bottom-trailing arc
-                    Circle()
-                        .trim(from: 0.05, to: 0.45)
-                        .stroke(AppColors.primaryText.opacity(0.3), lineWidth: 1)
-
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundStyle(AppColors.primaryText)
-                }
-                .frame(width: 48, height: 48)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Close player")
+            backButton
 
             Spacer()
 
@@ -90,28 +94,9 @@ public struct PlayerView: View {
 
             Spacer()
 
-            Button {
-                viewModel.onMoreTapped()
-            } label: {
-                ZStack {
-                    // Top-leading arc
-                    Circle()
-                        .trim(from: 0.55, to: 0.95)
-                        .stroke(AppColors.primaryText.opacity(0.3), lineWidth: 1)
-                    // Bottom-trailing arc
-                    Circle()
-                        .trim(from: 0.05, to: 0.45)
-                        .stroke(AppColors.primaryText.opacity(0.3), lineWidth: 1)
-
-                    Image(systemName: "ellipsis")
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundStyle(AppColors.primaryText)
-                }
-                .frame(width: 48, height: 48)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("More options")
+            moreButton
         }
+        .frame(height: 50)
         .padding(.horizontal, AppSpacing.screenPadding)
         .padding(.top, AppSpacing.sm)
     }
@@ -120,7 +105,7 @@ public struct PlayerView: View {
         AsyncImageView(
             url: viewModel.song.artworkUrl600,
             size: 264,
-            cornerRadius: AppSpacing.cornerRadiusLarge
+            cornerRadius: 32
         )
     }
 
@@ -138,28 +123,35 @@ public struct PlayerView: View {
                     }
                 }
 
-                Text(viewModel.song.artistName)
-                    .font(AppTypography.body)
-                    .foregroundStyle(AppColors.secondaryText)
-                    .lineLimit(1)
+                HStack {
+                    Text(viewModel.song.artistName)
+                        .font(AppTypography.callout)
+                        .foregroundStyle(AppColors.secondaryText)
+                        .lineLimit(1)
+                    
+                    Spacer()
+                    
+                    repeatButton
+                }
             }
-
-            Spacer()
-
-            Button {
-                viewModel.toggleRepeat()
-            } label: {
-                Image(systemName: "repeat")
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(viewModel.isRepeatEnabled ? AppColors.accent : AppColors.secondaryText)
-                    .frame(width: 24, height: 24)
-            }
-            .buttonStyle(.plain)
-            .padding(.top, AppSpacing.xxs)
         }
         .padding(.horizontal, AppSpacing.xl)
     }
 
+    var repeatButton: some View {
+        Button {
+            viewModel.toggleRepeat()
+        } label: {
+            Image("ic-repeat", bundle: .main)
+                .renderingMode(.template)
+                .foregroundStyle(viewModel.isRepeatEnabled ? AppColors.accent : AppColors.primaryText)
+        }
+        .buttonStyle(.plain)
+        .tint(AppColors.primaryText)
+        .padding(.top, AppSpacing.xxs)
+    }
+    
+    
     private var progressView: some View {
         ProgressSliderView(
             currentTime: viewModel.formattedCurrentTime,

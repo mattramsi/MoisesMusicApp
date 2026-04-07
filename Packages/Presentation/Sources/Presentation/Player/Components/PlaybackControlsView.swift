@@ -1,5 +1,45 @@
 import SwiftUI
 
+struct PlayButtonBackground: View {
+    var body: some View {
+        ZStack {
+            // Base escura
+            Circle()
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color.black.opacity(0.9),
+                            Color.gray.opacity(0.6)
+                        ]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            // Brilho (efeito glossy)
+            Circle()
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color.white.opacity(0.25),
+                            Color.white.opacity(0.05),
+                            Color.clear
+                        ]),
+                        startPoint: .top,
+                        endPoint: .center
+                    )
+                )
+                .blendMode(.overlay)
+
+            // Borda leve
+            Circle()
+                .stroke(Color.white.opacity(0.15), lineWidth: 1)
+        }
+        .frame(width: 72, height: 72)
+        .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
+    }
+}
+
 public struct PlaybackControlsView: View {
     let isPlaying: Bool
     let isLoading: Bool
@@ -22,13 +62,11 @@ public struct PlaybackControlsView: View {
     }
 
     public var body: some View {
-        HStack(spacing: AppSpacing.xxl) {
+        HStack(spacing: 28) {
             // Previous track button
             Button(action: onSkipBackward) {
-                Image(systemName: "backward.end.fill")
-                    .font(.system(size: 36, weight: .medium))
-                    .foregroundStyle(AppColors.primaryText)
-                    .frame(width: 36, height: 36)
+                Image("ic-skip", bundle: .main)
+                    .scaleEffect(x: -1, y: 1)
             }
             .buttonStyle(.plain)
             .disabled(isLoading)
@@ -37,9 +75,7 @@ public struct PlaybackControlsView: View {
             // Play/Pause button
             Button(action: onPlayPause) {
                 ZStack {
-                    Circle()
-                        .fill(AppColors.secondaryBackground)
-                        .frame(width: 80, height: 80)
+                    PlayButtonBackground()
 
                     if isLoading {
                         ProgressView()
@@ -59,10 +95,7 @@ public struct PlaybackControlsView: View {
 
             // Next track button
             Button(action: onSkipForward) {
-                Image(systemName: "forward.end.fill")
-                    .font(.system(size: 36, weight: .medium))
-                    .foregroundStyle(AppColors.primaryText)
-                    .frame(width: 36, height: 36)
+                Image("ic-skip", bundle: .main)
             }
             .buttonStyle(.plain)
             .disabled(isLoading)

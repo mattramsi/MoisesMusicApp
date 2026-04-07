@@ -13,17 +13,24 @@ public struct SearchBarView: View {
 
     public var body: some View {
         HStack(spacing: AppSpacing.xs) {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(AppColors.secondaryText)
-                .font(.system(size: AppSpacing.iconSizeMedium))
+            Image("ic-search-stroke", bundle: .main)
+                .renderingMode(.template)
+                .foregroundStyle(AppColors.placeholderText)
 
-            TextField(placeholder, text: $text)
-                .foregroundStyle(AppColors.primaryText)
-                .font(AppTypography.body)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-                .submitLabel(.search)
-                .onSubmit(onSubmit)
+            ZStack(alignment: .leading) {
+                if text.isEmpty {
+                    Text(placeholder)
+                        .foregroundStyle(AppColors.placeholderText)
+                        .font(AppTypography.body)
+                }
+                TextField("", text: $text)
+                    .foregroundStyle(AppColors.primaryText)
+                    .font(AppTypography.body)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .submitLabel(.search)
+                    .onSubmit(onSubmit)
+            }
 
             if !text.isEmpty {
                 Button {
@@ -39,7 +46,7 @@ public struct SearchBarView: View {
         .padding(.horizontal, AppSpacing.sm)
         .padding(.vertical, AppSpacing.xs)
         .background(AppColors.searchBarBackground)
-        .clipShape(RoundedRectangle(cornerRadius: AppSpacing.cornerRadiusMedium))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 

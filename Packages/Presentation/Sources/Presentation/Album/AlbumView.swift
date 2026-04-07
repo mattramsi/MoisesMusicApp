@@ -29,9 +29,28 @@ public struct AlbumView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 18, weight: .medium))
+                    Image("ic-back", bundle: .main)
+                        .resizable()
+                        .frame(width: 28, height: 48)
+                }
+            }
+
+            ToolbarItem(placement: .principal) {
+                if let album = viewModel.album {
+                    Text(album.collectionName)
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(AppColors.primaryText)
+                        .lineLimit(1)
+                }
+            }
+
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    // More action
+                } label: {
+                    Image("ic-more", bundle: .main)
+                        .resizable()
+                        .frame(width: 28, height: 48)
                 }
             }
         }

@@ -4,11 +4,12 @@ public enum AppColors {
     public static let background = Color.black
     public static let secondaryBackground = Color(hex: 0x3A3A3C)
     public static let cardBackground = Color(hex: 0x2C2C2E)
-    public static let searchBarBackground = Color(hex: 0x3A3A3C)
+    public static let searchBarBackground = Color.white.opacity(0.1)
 
     public static let primaryText = Color.white
     public static let secondaryText = Color(hex: 0x8E8E93)
     public static let tertiaryText = Color(hex: 0x636366)
+    public static let placeholderText = Color(hex: 0xA8A8A8)
 
     public static let accent = Color(hex: 0x007AFF)
     public static let accentGreen = Color(hex: 0x32D74B)
