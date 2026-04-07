@@ -1,7 +1,8 @@
 import SwiftUI
 
 public enum AppColors {
-    public static let background = Color(hex: 0x1C1C1E)
+    public static let background = Color.black
+    public static let secondaryBackground = Color(hex: 0x3A3A3C)
     public static let cardBackground = Color(hex: 0x2C2C2E)
     public static let searchBarBackground = Color(hex: 0x3A3A3C)
 

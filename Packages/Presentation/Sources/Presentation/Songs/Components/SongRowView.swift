@@ -6,65 +6,66 @@ public struct SongRowView: View {
     let song: Song
     let onTap: () -> Void
     let onLongPress: () -> Void
+    let showMoreButton: Bool
 
-    public init(song: Song, onTap: @escaping () -> Void, onLongPress: @escaping () -> Void = {}) {
+    public init(
+        song: Song,
+        onTap: @escaping () -> Void,
+        onLongPress: @escaping () -> Void = {},
+        showMoreButton: Bool = true
+    ) {
         self.song = song
         self.onTap = onTap
         self.onLongPress = onLongPress
+        self.showMoreButton = showMoreButton
     }
 
     public var body: some View {
-        Button {
-            onTap()
-        } label: {
-            HStack(spacing: AppSpacing.sm) {
-                AsyncImageView(
-                    url: song.artworkUrl100,
-                    size: AppSpacing.artworkSizeMedium
-                )
+        HStack(spacing: AppSpacing.xs) {
+            AsyncImageView(
+                url: song.artworkUrl100,
+                size: 52
+            )
 
-                VStack(alignment: .leading, spacing: AppSpacing.xxs) {
-                    HStack(spacing: AppSpacing.xxs) {
-                        Text(song.trackName)
-                            .font(AppTypography.headline)
-                            .foregroundStyle(AppColors.primaryText)
-                            .lineLimit(1)
+            VStack(alignment: .leading, spacing: AppSpacing.xxs) {
+                HStack(spacing: AppSpacing.xxs) {
+                    Text(song.trackName)
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(AppColors.primaryText)
+                        .lineLimit(1)
 
-                        if song.isExplicit {
-                            ExplicitBadge()
-                        }
+                    if song.isExplicit {
+                        ExplicitBadge()
                     }
-
-                    Text(song.artistName)
-                        .font(AppTypography.subheadline)
-                        .foregroundStyle(AppColors.secondaryText)
-                        .lineLimit(1)
-
-                    Text(song.collectionName)
-                        .font(AppTypography.caption)
-                        .foregroundStyle(AppColors.tertiaryText)
-                        .lineLimit(1)
                 }
 
-                Spacer()
-
-                Text(song.formattedDuration)
-                    .font(AppTypography.caption)
+                Text(song.artistName)
+                    .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(AppColors.secondaryText)
+                    .lineLimit(1)
             }
-            .padding(.horizontal, AppSpacing.screenPadding)
-            .padding(.vertical, AppSpacing.xs)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .simultaneousGesture(
-            LongPressGesture(minimumDuration: 0.5)
-                .onEnded { _ in
+
+            Spacer()
+
+            if showMoreButton {
+                Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
                     onLongPress()
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(AppColors.secondaryText)
+                        .frame(width: 36, height: 36)
                 }
-        )
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(AppSpacing.xs)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onTap()
+        }
     }
 }
 
@@ -83,13 +84,17 @@ public struct ExplicitBadge: View {
 }
 
 public struct SongRowSkeletonView: View {
-    public init() {}
+    let showMoreButton: Bool
+
+    public init(showMoreButton: Bool = true) {
+        self.showMoreButton = showMoreButton
+    }
 
     public var body: some View {
-        HStack(spacing: AppSpacing.sm) {
+        HStack(spacing: AppSpacing.xs) {
             RoundedRectangle(cornerRadius: AppSpacing.cornerRadiusMedium)
                 .fill(AppColors.skeleton)
-                .frame(width: AppSpacing.artworkSizeMedium, height: AppSpacing.artworkSizeMedium)
+                .frame(width: 52, height: 52)
 
             VStack(alignment: .leading, spacing: AppSpacing.xxs) {
                 RoundedRectangle(cornerRadius: 4)
@@ -98,21 +103,18 @@ public struct SongRowSkeletonView: View {
 
                 RoundedRectangle(cornerRadius: 4)
                     .fill(AppColors.skeleton)
-                    .frame(width: 100, height: 14)
-
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(AppColors.skeleton)
-                    .frame(width: 80, height: 12)
+                    .frame(width: 100, height: 12)
             }
 
             Spacer()
 
-            RoundedRectangle(cornerRadius: 4)
-                .fill(AppColors.skeleton)
-                .frame(width: 35, height: 12)
+            if showMoreButton {
+                Circle()
+                    .fill(AppColors.skeleton)
+                    .frame(width: 36, height: 36)
+            }
         }
-        .padding(.horizontal, AppSpacing.screenPadding)
-        .padding(.vertical, AppSpacing.xs)
+        .padding(AppSpacing.xs)
         .shimmer()
     }
 }

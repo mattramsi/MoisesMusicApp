@@ -66,7 +66,7 @@ public struct AlbumView: View {
 
     private var contentView: some View {
         ScrollView {
-            VStack(spacing: 0) {
+            VStack(spacing: 40) {
                 albumHeader
 
                 songsList
@@ -79,10 +79,9 @@ public struct AlbumView: View {
             if let album = viewModel.album {
                 AsyncImageView(
                     url: album.artworkUrl600,
-                    size: 200,
+                    size: 120,
                     cornerRadius: AppSpacing.cornerRadiusMedium
                 )
-                .shadow(color: .black.opacity(0.3), radius: 15, x: 0, y: 8)
 
                 VStack(spacing: AppSpacing.xxs) {
                     Text(album.collectionName)
@@ -93,25 +92,7 @@ public struct AlbumView: View {
 
                     Text(album.artistName)
                         .font(AppTypography.body)
-                        .foregroundStyle(AppColors.accent)
-
-                    HStack(spacing: AppSpacing.xs) {
-                        if let genre = album.primaryGenreName {
-                            Text(genre)
-                        }
-
-                        if let year = album.releaseYear {
-                            Text("•")
-                            Text(year)
-                        }
-                    }
-                    .font(AppTypography.subheadline)
-                    .foregroundStyle(AppColors.secondaryText)
-
-                    Text("\(viewModel.songs.count) songs, \(viewModel.totalDuration)")
-                        .font(AppTypography.caption)
-                        .foregroundStyle(AppColors.tertiaryText)
-                        .padding(.top, AppSpacing.xxs)
+                        .foregroundStyle(AppColors.secondaryText)
                 }
             }
         }
@@ -121,61 +102,14 @@ public struct AlbumView: View {
 
     private var songsList: some View {
         LazyVStack(spacing: 0) {
-            ForEach(Array(viewModel.songs.enumerated()), id: \.element.id) { index, song in
-                AlbumSongRow(
-                    trackNumber: song.trackNumber ?? (index + 1),
+            ForEach(viewModel.songs) { song in
+                SongRowView(
                     song: song,
-                    onTap: { onSongTap(song) }
+                    onTap: { onSongTap(song) },
+                    showMoreButton: false
                 )
             }
         }
-    }
-}
-
-struct AlbumSongRow: View {
-    let trackNumber: Int
-    let song: Song
-    let onTap: () -> Void
-
-    var body: some View {
-        Button(action: onTap) {
-            HStack(spacing: AppSpacing.sm) {
-                Text("\(trackNumber)")
-                    .font(AppTypography.body)
-                    .foregroundStyle(AppColors.tertiaryText)
-                    .frame(width: 24, alignment: .center)
-
-                VStack(alignment: .leading, spacing: AppSpacing.xxxs) {
-                    HStack(spacing: AppSpacing.xxs) {
-                        Text(song.trackName)
-                            .font(AppTypography.body)
-                            .foregroundStyle(AppColors.primaryText)
-                            .lineLimit(1)
-
-                        if song.isExplicit {
-                            ExplicitBadge()
-                        }
-                    }
-
-                    if song.artistName != (song.collectionName.isEmpty ? "" : song.artistName) {
-                        Text(song.artistName)
-                            .font(AppTypography.caption)
-                            .foregroundStyle(AppColors.secondaryText)
-                            .lineLimit(1)
-                    }
-                }
-
-                Spacer()
-
-                Text(song.formattedDuration)
-                    .font(AppTypography.caption)
-                    .foregroundStyle(AppColors.secondaryText)
-            }
-            .padding(.horizontal, AppSpacing.screenPadding)
-            .padding(.vertical, AppSpacing.sm)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
     }
 }
 

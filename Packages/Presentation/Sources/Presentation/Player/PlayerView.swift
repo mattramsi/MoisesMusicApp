@@ -4,9 +4,11 @@ import Domain
 public struct PlayerView: View {
     @Bindable var viewModel: PlayerViewModel
     @Environment(\.dismiss) private var dismiss
+    var onViewAlbum: () -> Void
 
-    public init(viewModel: PlayerViewModel) {
+    public init(viewModel: PlayerViewModel, onViewAlbum: @escaping () -> Void = {}) {
         self.viewModel = viewModel
+        self.onViewAlbum = onViewAlbum
     }
 
     public var body: some View {
@@ -39,6 +41,20 @@ public struct PlayerView: View {
         .onDisappear {
             viewModel.onDisappear()
         }
+        .sheet(isPresented: $viewModel.showActionSheet) {
+            SongActionSheet(
+                song: viewModel.song,
+                onViewAlbum: {
+                    viewModel.showActionSheet = false
+                    onViewAlbum()
+                },
+                onDismiss: {
+                    viewModel.showActionSheet = false
+                }
+            )
+            .presentationDetents([.height(200)])
+            .presentationDragIndicator(.hidden)
+        }
     }
 
     private var navigationBar: some View {
@@ -46,24 +62,41 @@ public struct PlayerView: View {
             Button {
                 dismiss()
             } label: {
-                Image(systemName: "chevron.down")
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(AppColors.primaryText)
-                    .frame(width: 44, height: 44)
+                Circle()
+                    .fill(AppColors.secondaryBackground)
+                    .frame(width: 48, height: 48)
+                    .overlay {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundStyle(AppColors.primaryText)
+                    }
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Close player")
 
             Spacer()
 
-            Text("Now Playing")
+            Text(viewModel.song.collectionName)
                 .font(AppTypography.headline)
-                .foregroundStyle(AppColors.secondaryText)
+                .foregroundStyle(AppColors.primaryText)
+                .lineLimit(1)
 
             Spacer()
 
-            Color.clear
-                .frame(width: 44, height: 44)
+            Button {
+                viewModel.onMoreTapped()
+            } label: {
+                Circle()
+                    .fill(AppColors.secondaryBackground)
+                    .frame(width: 48, height: 48)
+                    .overlay {
+                        Image(systemName: "ellipsis")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundStyle(AppColors.primaryText)
+                    }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("More options")
         }
         .padding(.horizontal, AppSpacing.screenPadding)
         .padding(.top, AppSpacing.sm)
@@ -72,34 +105,43 @@ public struct PlayerView: View {
     private var artworkView: some View {
         AsyncImageView(
             url: viewModel.song.artworkUrl600,
-            size: AppSpacing.artworkSizePlayer,
+            size: 264,
             cornerRadius: AppSpacing.cornerRadiusLarge
         )
-        .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 10)
     }
 
     private var songInfo: some View {
-        VStack(spacing: AppSpacing.xxs) {
-            HStack(spacing: AppSpacing.xxs) {
-                Text(viewModel.song.trackName)
-                    .font(AppTypography.title2)
-                    .foregroundStyle(AppColors.primaryText)
-                    .lineLimit(1)
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: AppSpacing.xxs) {
+                HStack(spacing: AppSpacing.xxs) {
+                    Text(viewModel.song.trackName)
+                        .font(AppTypography.title2)
+                        .foregroundStyle(AppColors.primaryText)
+                        .lineLimit(1)
 
-                if viewModel.song.isExplicit {
-                    ExplicitBadge()
+                    if viewModel.song.isExplicit {
+                        ExplicitBadge()
+                    }
                 }
+
+                Text(viewModel.song.artistName)
+                    .font(AppTypography.body)
+                    .foregroundStyle(AppColors.secondaryText)
+                    .lineLimit(1)
             }
 
-            Text(viewModel.song.artistName)
-                .font(AppTypography.body)
-                .foregroundStyle(AppColors.secondaryText)
-                .lineLimit(1)
+            Spacer()
 
-            Text(viewModel.song.collectionName)
-                .font(AppTypography.subheadline)
-                .foregroundStyle(AppColors.tertiaryText)
-                .lineLimit(1)
+            Button {
+                viewModel.toggleRepeat()
+            } label: {
+                Image(systemName: "repeat")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(viewModel.isRepeatEnabled ? AppColors.accent : AppColors.secondaryText)
+                    .frame(width: 24, height: 24)
+            }
+            .buttonStyle(.plain)
+            .padding(.top, AppSpacing.xxs)
         }
         .padding(.horizontal, AppSpacing.xl)
     }
@@ -131,9 +173,9 @@ public struct PlayerView: View {
 }
 
 #Preview("Playing") {
-    PlayerView(viewModel: .preview(isPlaying: true, currentTime: 45, duration: 90))
+    PlayerView(viewModel: .preview(isPlaying: true, currentTime: 45, duration: 90), onViewAlbum: {})
 }
 
 #Preview("Paused") {
-    PlayerView(viewModel: .preview(isPlaying: false, currentTime: 30, duration: 90))
+    PlayerView(viewModel: .preview(isPlaying: false, currentTime: 30, duration: 90), onViewAlbum: {})
 }

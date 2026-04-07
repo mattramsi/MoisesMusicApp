@@ -23,44 +23,50 @@ public struct PlaybackControlsView: View {
 
     public var body: some View {
         HStack(spacing: AppSpacing.xxl) {
-            // Skip backward button
+            // Previous track button
             Button(action: onSkipBackward) {
-                Image(systemName: "gobackward.15")
-                    .font(.system(size: 32, weight: .medium))
+                Image(systemName: "backward.end.fill")
+                    .font(.system(size: 36, weight: .medium))
                     .foregroundStyle(AppColors.primaryText)
+                    .frame(width: 36, height: 36)
             }
             .buttonStyle(.plain)
             .disabled(isLoading)
-            .accessibilityLabel("Skip backward 15 seconds")
+            .accessibilityLabel("Previous track")
 
             // Play/Pause button
             Button(action: onPlayPause) {
                 ZStack {
+                    Circle()
+                        .fill(AppColors.secondaryBackground)
+                        .frame(width: 80, height: 80)
+
                     if isLoading {
                         ProgressView()
                             .tint(AppColors.primaryText)
                             .scaleEffect(1.5)
                     } else {
-                        Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .font(.system(size: 72))
+                        Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                            .font(.system(size: 32, weight: .medium))
                             .foregroundStyle(AppColors.primaryText)
+                            .offset(x: isPlaying ? 0 : 2)
                     }
                 }
-                .frame(width: 72, height: 72)
             }
             .buttonStyle(.plain)
             .disabled(isLoading)
             .accessibilityLabel(isPlaying ? "Pause" : "Play")
 
-            // Skip forward button
+            // Next track button
             Button(action: onSkipForward) {
-                Image(systemName: "goforward.15")
-                    .font(.system(size: 32, weight: .medium))
+                Image(systemName: "forward.end.fill")
+                    .font(.system(size: 36, weight: .medium))
                     .foregroundStyle(AppColors.primaryText)
+                    .frame(width: 36, height: 36)
             }
             .buttonStyle(.plain)
             .disabled(isLoading)
-            .accessibilityLabel("Skip forward 15 seconds")
+            .accessibilityLabel("Next track")
         }
     }
 }

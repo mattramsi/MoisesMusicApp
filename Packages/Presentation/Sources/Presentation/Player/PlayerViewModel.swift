@@ -11,6 +11,8 @@ public final class PlayerViewModel {
     public private(set) var currentTime: Double = 0
     public private(set) var duration: Double = 0
     public private(set) var isLoading = false
+    public var isRepeatEnabled = false
+    public var showActionSheet = false
 
     private let audioPlayer: AudioPlayerService
     private let saveRecentlyPlayedUseCase: any SaveRecentlyPlayedUseCaseProtocol
@@ -111,6 +113,14 @@ public final class PlayerViewModel {
             await audioPlayer.seek(to: time)
             currentTime = time
         }
+    }
+
+    public func toggleRepeat() {
+        isRepeatEnabled.toggle()
+    }
+
+    public func onMoreTapped() {
+        showActionSheet = true
     }
 
     public var progress: Double {
