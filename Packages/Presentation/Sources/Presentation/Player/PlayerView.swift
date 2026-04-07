@@ -23,7 +23,7 @@ public struct PlayerView: View {
                 artworkView
 
                 songInfo
-                    .padding(.top, AppSpacing.xxl)
+                    .padding(.top, 116)
 
                 progressView
                     .padding(.horizontal, AppSpacing.xl)
@@ -62,14 +62,21 @@ public struct PlayerView: View {
             Button {
                 dismiss()
             } label: {
-                Circle()
-                    .fill(AppColors.secondaryBackground)
-                    .frame(width: 48, height: 48)
-                    .overlay {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(AppColors.primaryText)
-                    }
+                ZStack {
+                    // Top-leading arc
+                    Circle()
+                        .trim(from: 0.55, to: 0.95)
+                        .stroke(AppColors.primaryText.opacity(0.3), lineWidth: 1)
+                    // Bottom-trailing arc
+                    Circle()
+                        .trim(from: 0.05, to: 0.45)
+                        .stroke(AppColors.primaryText.opacity(0.3), lineWidth: 1)
+
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundStyle(AppColors.primaryText)
+                }
+                .frame(width: 48, height: 48)
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Close player")
@@ -86,14 +93,21 @@ public struct PlayerView: View {
             Button {
                 viewModel.onMoreTapped()
             } label: {
-                Circle()
-                    .fill(AppColors.secondaryBackground)
-                    .frame(width: 48, height: 48)
-                    .overlay {
-                        Image(systemName: "ellipsis")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(AppColors.primaryText)
-                    }
+                ZStack {
+                    // Top-leading arc
+                    Circle()
+                        .trim(from: 0.55, to: 0.95)
+                        .stroke(AppColors.primaryText.opacity(0.3), lineWidth: 1)
+                    // Bottom-trailing arc
+                    Circle()
+                        .trim(from: 0.05, to: 0.45)
+                        .stroke(AppColors.primaryText.opacity(0.3), lineWidth: 1)
+
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundStyle(AppColors.primaryText)
+                }
+                .frame(width: 48, height: 48)
             }
             .buttonStyle(.plain)
             .accessibilityLabel("More options")
