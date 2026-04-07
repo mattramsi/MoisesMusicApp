@@ -15,45 +15,19 @@ public struct AlbumView: View {
         ZStack {
             AppColors.background.ignoresSafeArea()
 
-            if viewModel.isLoading {
-                loadingView
-            } else if let error = viewModel.error {
-                errorView(message: error)
-            } else {
-                contentView
-            }
-        }
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image("ic-back", bundle: .main)
-                        .resizable()
-                        .frame(width: 28, height: 48)
-                }
-            }
+            VStack(spacing: 0) {
+                navigationBar
 
-            ToolbarItem(placement: .principal) {
-                if let album = viewModel.album {
-                    Text(album.collectionName)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(AppColors.primaryText)
-                        .lineLimit(1)
-                }
-            }
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    // More action
-                } label: {
-                    Image("ic-more", bundle: .main)
-                        .resizable()
-                        .frame(width: 28, height: 48)
+                if viewModel.isLoading {
+                    loadingView
+                } else if let error = viewModel.error {
+                    errorView(message: error)
+                } else {
+                    contentView
                 }
             }
         }
+        .navigationBarHidden(true)
         .task {
             await viewModel.onAppear()
         }
@@ -81,6 +55,36 @@ public struct AlbumView: View {
                 .multilineTextAlignment(.center)
         }
         .padding(AppSpacing.xl)
+    }
+
+    private var navigationBar: some View {
+        HStack {
+            Button {
+                dismiss()
+            } label: {
+                Image("ic-back", bundle: .main)
+                    .resizable()
+                    .frame(width: 48, height: 48)
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+
+            if let album = viewModel.album {
+                Text(album.collectionName)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(AppColors.primaryText)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            // Empty spacer to balance the back button
+            Color.clear
+                .frame(width: 48, height: 48)
+        }
+        .padding(.horizontal, AppSpacing.screenPadding)
+        .padding(.top, AppSpacing.sm)
     }
 
     private var contentView: some View {
