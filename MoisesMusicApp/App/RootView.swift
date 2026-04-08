@@ -55,7 +55,17 @@ public struct RootView: View {
             }
         }
         .fullScreenCover(item: $selectedSong) { song in
-            PlayerView(viewModel: container.makePlayerViewModel(song: song))
+            PlayerView(
+                viewModel: container.makePlayerViewModel(song: song),
+                onViewAlbum: {
+                    if let albumId = song.collectionId {
+                        selectedSong = nil
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            navigationPath.append(NavigationDestination.album(albumId))
+                        }
+                    }
+                }
+            )
         }
         .tint(AppColors.accent)
     }

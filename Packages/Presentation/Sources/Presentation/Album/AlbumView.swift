@@ -70,15 +70,6 @@ public struct AlbumView: View {
 
             Spacer()
 
-            if let album = viewModel.album {
-                Text(album.collectionName)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(AppColors.primaryText)
-                    .lineLimit(1)
-            }
-
-            Spacer()
-
             // Empty spacer to balance the back button
             Color.clear
                 .frame(width: 48, height: 48)
@@ -89,38 +80,38 @@ public struct AlbumView: View {
 
     private var contentView: some View {
         ScrollView {
-            VStack(spacing: 40) {
+            VStack(spacing: 0) {
                 albumHeader
 
                 songsList
+                    .padding(.top, 50)
             }
         }
     }
 
     private var albumHeader: some View {
-        VStack(spacing: AppSpacing.md) {
+        VStack(spacing: 0) {
             if let album = viewModel.album {
                 AsyncImageView(
                     url: album.artworkUrl600,
                     size: 120,
-                    cornerRadius: AppSpacing.cornerRadiusMedium
+                    cornerRadius: AppSpacing.cornerRadiusXLarge
                 )
 
-                VStack(spacing: AppSpacing.xxs) {
-                    Text(album.collectionName)
-                        .font(AppTypography.title2)
-                        .foregroundStyle(AppColors.primaryText)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
+                Text(album.collectionName)
+                    .font(AppTypography.title2)
+                    .foregroundStyle(AppColors.primaryText)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .padding(.top, AppSpacing.md)
 
-                    Text(album.artistName)
-                        .font(AppTypography.body)
-                        .foregroundStyle(AppColors.secondaryText)
-                }
+                Text(album.artistName)
+                    .font(AppTypography.body)
+                    .foregroundStyle(AppColors.secondaryText)
+                    .padding(.top, AppSpacing.xs)
             }
         }
         .padding(.horizontal, AppSpacing.xl)
-        .padding(.vertical, AppSpacing.lg)
     }
 
     private var songsList: some View {
@@ -129,7 +120,9 @@ public struct AlbumView: View {
                 SongRowView(
                     song: song,
                     onTap: { onSongTap(song) },
-                    showMoreButton: false
+                    showMoreButton: false,
+                    artworkSize: 44,
+                    rowHeight: 60
                 )
             }
         }

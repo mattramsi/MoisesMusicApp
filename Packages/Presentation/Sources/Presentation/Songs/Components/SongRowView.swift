@@ -7,24 +7,30 @@ public struct SongRowView: View {
     let onTap: () -> Void
     let onLongPress: () -> Void
     let showMoreButton: Bool
+    let artworkSize: CGFloat
+    let rowHeight: CGFloat
 
     public init(
         song: Song,
         onTap: @escaping () -> Void,
         onLongPress: @escaping () -> Void = {},
-        showMoreButton: Bool = true
+        showMoreButton: Bool = true,
+        artworkSize: CGFloat = 52,
+        rowHeight: CGFloat = 68
     ) {
         self.song = song
         self.onTap = onTap
         self.onLongPress = onLongPress
         self.showMoreButton = showMoreButton
+        self.artworkSize = artworkSize
+        self.rowHeight = rowHeight
     }
 
     public var body: some View {
         HStack(spacing: AppSpacing.xs) {
             AsyncImageView(
                 url: song.artworkUrl100,
-                size: 52
+                size: artworkSize
             )
 
             VStack(alignment: .leading, spacing: AppSpacing.xxs) {
@@ -61,7 +67,7 @@ public struct SongRowView: View {
                 .buttonStyle(.plain)
             }
         }
-        .padding(AppSpacing.xs)
+        .frame(height: rowHeight)
         .contentShape(Rectangle())
         .onTapGesture {
             onTap()

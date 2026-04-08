@@ -46,10 +46,7 @@ public struct PlayerView: View {
                 song: viewModel.song,
                 onViewAlbum: {
                     viewModel.showActionSheet = false
-                    dismiss()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        onViewAlbum()
-                    }
+                    onViewAlbum()
                 },
                 onDismiss: {
                     viewModel.showActionSheet = false
