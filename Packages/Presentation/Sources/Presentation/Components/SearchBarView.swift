@@ -13,7 +13,7 @@ public struct SearchBarView: View {
 
     public var body: some View {
         HStack(spacing: AppSpacing.xs) {
-            Image("ic-search-stroke", bundle: .main)
+            Image("ic-search-stroke", bundle: .module)
                 .renderingMode(.template)
                 .foregroundStyle(AppColors.placeholderText)
 

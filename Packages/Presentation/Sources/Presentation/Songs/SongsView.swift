@@ -107,7 +107,7 @@ public struct SongsView: View {
         Button {
             shouldScrollToTop = true
         } label: {
-            Image("ic-search", bundle: .main)
+            Image("ic-search", bundle: .module)
                 .resizable()
                 .frame(width: 48, height: 48)
         }

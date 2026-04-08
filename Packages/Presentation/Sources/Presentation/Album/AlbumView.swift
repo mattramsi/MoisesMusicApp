@@ -62,7 +62,7 @@ public struct AlbumView: View {
             Button {
                 dismiss()
             } label: {
-                Image("ic-back", bundle: .main)
+                Image("ic-back", bundle: .module)
                     .resizable()
                     .frame(width: 48, height: 48)
             }

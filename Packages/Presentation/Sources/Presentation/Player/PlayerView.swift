@@ -61,7 +61,7 @@ public struct PlayerView: View {
         Button {
             dismiss()
         } label: {
-            Image("ic-back", bundle: .main)
+            Image("ic-back", bundle: .module)
                 .resizable()
                 .frame(width: 48, height: 48)
         }
@@ -73,7 +73,7 @@ public struct PlayerView: View {
         Button {
             viewModel.onMoreTapped()
         } label: {
-            Image("ic-more", bundle: .main)
+            Image("ic-more", bundle: .module)
                 .resizable()
                 .frame(width: 48, height: 48)
         }
@@ -142,7 +142,7 @@ public struct PlayerView: View {
         Button {
             viewModel.toggleRepeat()
         } label: {
-            Image("ic-repeat", bundle: .main)
+            Image("ic-repeat", bundle: .module)
                 .renderingMode(.template)
                 .foregroundStyle(viewModel.isRepeatEnabled ? AppColors.accent : AppColors.primaryText)
         }

@@ -7,8 +7,7 @@ final class SplashViewSnapshotTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        // Set record mode to true to record new snapshots
-        // isRecording = true
+        isRecording = false
     }
 
     func testSplashView() {

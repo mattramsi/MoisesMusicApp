@@ -65,7 +65,7 @@ public struct PlaybackControlsView: View {
         HStack(spacing: 28) {
             // Previous track button
             Button(action: onSkipBackward) {
-                Image("ic-skip", bundle: .main)
+                Image("ic-skip", bundle: .module)
                     .scaleEffect(x: -1, y: 1)
             }
             .buttonStyle(.plain)
@@ -95,7 +95,7 @@ public struct PlaybackControlsView: View {
 
             // Next track button
             Button(action: onSkipForward) {
-                Image("ic-skip", bundle: .main)
+                Image("ic-skip", bundle: .module)
             }
             .buttonStyle(.plain)
             .disabled(isLoading)

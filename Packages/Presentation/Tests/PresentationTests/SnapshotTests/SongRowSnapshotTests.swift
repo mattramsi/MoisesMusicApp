@@ -8,7 +8,7 @@ final class SongRowSnapshotTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        // isRecording = true
+        isRecording = false
     }
 
     func testSongRow_default() {
