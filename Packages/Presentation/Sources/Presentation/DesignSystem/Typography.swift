@@ -15,6 +15,29 @@ public enum AppTypography {
     public static let footnote = Font.system(size: 13, weight: .regular, design: .default)
     public static let caption = Font.system(size: 12, weight: .regular, design: .default)
     public static let caption2 = Font.system(size: 11, weight: .regular, design: .default)
+
+    // MARK: - Song Row
+    public static let songTitle = Font.system(size: 16, weight: .medium, design: .default)
+    public static let songArtist = Font.system(size: 12, weight: .medium, design: .default)
+
+    // MARK: - Headers
+    public static let headerTitle = Font.system(size: 16, weight: .semibold, design: .default)
+    public static let headerTitleLarge = Font.system(size: 24, weight: .semibold, design: .default)
+
+    // MARK: - Action Sheet
+    public static let actionSheetTitle = Font.system(size: 16, weight: .semibold, design: .default)
+    public static let actionSheetSubtitle = Font.system(size: 14, weight: .regular, design: .default)
+    public static let actionButtonLabel = Font.system(size: 16, weight: .regular, design: .default)
+    public static let actionIcon = Font.system(size: 20, weight: .regular, design: .default)
+
+    // MARK: - Player
+    public static let playIcon = Font.system(size: 32, weight: .medium, design: .default)
+
+    // MARK: - State Icons
+    public static let stateIcon = Font.system(size: 48, weight: .regular, design: .default)
+
+    // MARK: - Badge
+    public static let badgeText = Font.system(size: 10, weight: .bold, design: .default)
 }
 
 public extension View {

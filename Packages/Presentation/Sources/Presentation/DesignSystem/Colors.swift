@@ -17,6 +17,14 @@ public enum AppColors {
 
     public static let divider = Color(hex: 0x3A3A3C)
     public static let skeleton = Color(hex: 0x3A3A3C)
+
+    // MARK: - Play Button
+    public static let playButtonGradientStart = Color.black.opacity(0.9)
+    public static let playButtonGradientEnd = Color.gray.opacity(0.6)
+    public static let playButtonGlossTop = Color.white.opacity(0.25)
+    public static let playButtonGlossMid = Color.white.opacity(0.05)
+    public static let playButtonStroke = Color.white.opacity(0.15)
+    public static let playButtonShadow = Color.black.opacity(0.5)
 }
 
 public extension Color {

@@ -28,6 +28,10 @@ public final class SongsViewModel {
     private(set) var hasMorePages = true
     private var searchTask: Task<Void, Never>?
 
+    // Debounce configuration
+    private let debounceDelay: Int = 300  // milliseconds
+    private let minimumCharacters: Int = 2
+
     public init(
         searchSongsUseCase: any SearchSongsUseCaseProtocol,
         getRecentlyPlayedUseCase: any GetRecentlyPlayedUseCaseProtocol
@@ -52,6 +56,33 @@ public final class SongsViewModel {
 
         searchTask = Task {
             await performSearch(query: query)
+        }
+    }
+
+    public func onSearchQueryChanged(_ newQuery: String) {
+        searchTask?.cancel()
+
+        let trimmed = newQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if trimmed.isEmpty {
+            songs = []
+            state = .idle
+            return
+        }
+
+        guard trimmed.count >= minimumCharacters else {
+            songs = []
+            state = .idle
+            return
+        }
+
+        searchTask = Task {
+            do {
+                try await Task.sleep(for: .milliseconds(debounceDelay))
+            } catch { return }
+
+            guard !Task.isCancelled else { return }
+            await performSearch(query: trimmed)
         }
     }
 
